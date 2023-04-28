@@ -4,7 +4,7 @@ const router = express.Router();
 const api = require(`../model/api`);
 
 const groupBy = require(`../public/scripts/groupBy`);
-const CPFFormat = require(`../public/scripts/CPFFormat`);
+const cpfFormatter = require(`../public/scripts/cpfFormatter`);
 
 router.get(`/1`, (req, res) => {
 
@@ -58,6 +58,9 @@ router.get(`/3`, (req, res) => {
     let evolucao = api.get(`/evolucao`);
 
     Promise.all([pacientes, atendimentos, lancamentos, itens, evolucao]).then(response => {
+
+        // Por que eu usei os index ao invés de me dirigir ao ../id? Pelo motivo de facilitar os processos, já que, eu procurando os dados a partir de uma única requisição, eu pouparia tempo de execução.
+
         let pacientes = response[0].data
         let atendimentos = response[1].data
         let lancamentos = response[2].data
@@ -68,8 +71,7 @@ router.get(`/3`, (req, res) => {
         let atendimentosReacaoAlergicaGrave = evolucao.filter(evolucao => evolucao.descricao.startsWith("reação alérgica grave")).map(evolucao => {
             return {
                 id_atendimento: evolucao.id_atendimento,
-                id_pessoa: atendimentos.find(atendimento => atendimento.id_atendimento == evolucao.id_atendimento).id_pessoa,
-                data: evolucao.data
+                id_pessoa: atendimentos.find(atendimento => atendimento.id_atendimento == evolucao.id_atendimento).id_pessoa
             }
         })
 
@@ -91,10 +93,10 @@ router.get(`/3`, (req, res) => {
             }
         });
 
-        // 4. Agrupar tudo
+        // 3. Agrupar tudo
         atendimentosReacaoAlergicaGrave.forEach(atendimento => {
             atendimento.nome = pessoasReacaoAlergicaGrave.find(pessoa => pessoa.id_pessoa == atendimento.id_pessoa).nome;
-            atendimento.cpf = CPFFormat(pessoasReacaoAlergicaGrave.find(pessoa => pessoa.id_pessoa == atendimento.id_pessoa).cpf);
+            atendimento.cpf = cpfFormatter(pessoasReacaoAlergicaGrave.find(pessoa => pessoa.id_pessoa == atendimento.id_pessoa).cpf);
             atendimento.id_item = lancamentosReacaoAlergicaGrave.filter(lancamento => lancamento.id_atendimento == atendimento.id_atendimento)[0].id_item;
             atendimento.descricao_medicamento = lancamentosReacaoAlergicaGrave.filter(lancamento => lancamento.id_atendimento == atendimento.id_atendimento)[0].descricao;
         });

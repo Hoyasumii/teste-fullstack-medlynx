@@ -1,0 +1,39 @@
+<%- include(`../partials/header.ejs`) %>
+
+<div class="container my-3">
+    <form action="" method="post" class="d-flex flex-column gap-3">
+        
+        <h1 class="display-6">Nova Consulta</h1>
+        <hr class="my-0">
+
+        <div>
+            <label for="patient-name" class="mb-1">Nome do Paciente</label>
+            <div class="input-group">
+                <label for="patient-name" class="input-group-text"><span class="bi bi-person"></span></label>
+                <select name="id_pessoa" id="patient-name" class="form-control">
+                    <% patients.forEach( patient => { %>
+                        <option value="<%= patient.id_pessoa %>"><%= patient.nome %> - <%= cpfFormatter(patient.cpf) %></option>
+                    <% }); %>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <label for="appointment_date" class="mb-1">Data da Consulta</label>
+            <div class="input-group">
+                <div class="input-group-text"><span class="bi bi-calendar"></span></div>
+                <input type="date" name="data_atendimento" id="appointment_date" class="form-control" onkeydown="return false" required>
+            </div>
+        </div>
+
+        <!-- TODO: Itens para registar: Exemplo, adicionar um botão para adicionar itens e esses botões serão de adição. Adicionando um novo item, será exibido um select com as opções referentes aos itens + a quantidade desejada. -->
+        <!-- TODO: Ver como isso pode ser implementado num formulário -->
+
+    </form>
+</div>
+
+<script>
+    appointment_date.min = new Date().toISOString().split("T")[0];
+</script>
+
+<%- include(`../partials/footer.ejs`) %>
