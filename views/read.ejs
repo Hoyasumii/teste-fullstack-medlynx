@@ -1,0 +1,29 @@
+<%- include(`./partials/header.ejs`) %>
+
+<div class="container my-3">
+
+    <h1 class="display-6">
+        Exibindo dados de: <%= title %>
+    </h1>
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <% columns.forEach(column => { %>
+                    <th scope="col"><%= column %></th>
+                <% }); %>
+            </tr>
+        </thead>
+        <tbody>
+            <% data.forEach(item => { %>
+                <tr>
+                    <% columns.forEach(column => { %>
+                        <td> <%= item[column] %> </td>
+                    <% }); %>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+
+<%- include(`./partials/footer.ejs`) %>

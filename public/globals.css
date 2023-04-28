@@ -1,0 +1,29 @@
+img[src="/logo.png"] {
+    height: 50px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+}
+
+@media(min-width: 576px) { /* SM BREAKPOINT */
+    .grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media(min-width: 768px) { /* MD BREAKPOINT */
+    .grid {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media(min-width: 992px) { /* LG BREAKPOINT */
+
+}
+
+@media(min-width: 1200px) { /* XL BREAKPOINT */
+
+}
