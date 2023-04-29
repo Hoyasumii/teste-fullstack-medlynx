@@ -3,12 +3,12 @@
 <div class="container my-3">
     <form action="" method="post" class="d-flex flex-column gap-3">
         
-        <h1 class="display-6">Nova Consulta</h1>
+        <h1 class="display-5">Nova Consulta</h1>
         <hr class="my-0">
 
         <div>
             <label for="patient-name" class="mb-1">Nome do Paciente</label>
-            <div class="input-group">
+            <div class="input-group shadow-sm">
                 <label for="patient-name" class="input-group-text"><span class="bi bi-person"></span></label>
                 <select name="id_pessoa" id="patient-name" class="form-control">
                     <% patients.forEach( patient => { %>
@@ -20,20 +20,110 @@
 
         <div>
             <label for="appointment_date" class="mb-1">Data da Consulta</label>
-            <div class="input-group">
+            <div class="input-group shadow-sm">
                 <div class="input-group-text"><span class="bi bi-calendar"></span></div>
                 <input type="date" name="data_atendimento" id="appointment_date" class="form-control" onkeydown="return false" required>
             </div>
         </div>
 
+        <br>
+        
+        <div id="add-item-container" class="d-flex justify-content-between align-items-center">
+            <h1 class="display-6 m-0">Itens selecionados</h1>
+            <button type="button" class="btn btn-dark" id="add-item-button" onclick="addItem()"><span class="bi bi-plus"></span> Adicionar item</button>
+        </div>
+
+        <hr class="m-0">
+
+        <div id="itens-container" class="d-flex flex-column gap-3">
+            
+        </div>
+
+        <hr class="m-0">
+
+        <button class="btn btn-dark">Cadastrar nova consulta</button>
+
+
+
         <!-- TODO: Itens para registar: Exemplo, adicionar um botão para adicionar itens e esses botões serão de adição. Adicionando um novo item, será exibido um select com as opções referentes aos itens + a quantidade desejada. -->
         <!-- TODO: Ver como isso pode ser implementado num formulário -->
+        <!-- TODO: Eu preciso criar um sistema que impeça que o usuário consiga escolher o item mais de uma vez? -->
 
     </form>
 </div>
 
 <script>
     appointment_date.min = new Date().toISOString().split("T")[0];
+    appointment_date.value = new Date().toISOString().split("T")[0];
+
+    let itemCounter = 1;
+
+    function addItem() {
+
+        let current = itemCounter;
+
+        let container = document.createElement(`div`);
+        container.classList.add(`bg-body-tertiary`, `p-3`, `border`, `rounded`, `d-flex`, `align-items-center`, `justify-content-between`, `shadow-sm`, `gap-3`);
+        container.id = `item-${itemCounter}`;
+
+        let inputGroup = document.createElement(`div`);
+        inputGroup.classList.add(`input-group`, `selected-itens`);
+
+        let itemLabel = document.createElement(`label`);
+        itemLabel.classList.add(`input-group-text`);
+        itemLabel.setAttribute(`for`, `item-${itemCounter}-name`);
+        itemLabel.innerHTML = `<span class="bi bi-capsule"></span>`;
+
+        let hasSelected = false;
+
+        let itemSelect = document.createElement(`select`);
+        itemSelect.classList.add(`form-control`, `w-50`);
+        itemSelect.setAttribute(`name`, `item-${itemCounter}-name`);
+        itemSelect.setAttribute(`id`, `item-${itemCounter}-name`);
+        itemSelect.innerHTML = `
+            <% itens.forEach( item => { %>
+                <option value="<%= item.id_item %>"><%= item.descricao %> - <%= moneyFormatter(item.valor) %></option>
+            <% }); %>
+        `;
+
+        let amountLabel = document.createElement(`label`);
+        amountLabel.classList.add(`input-group-text`);
+        amountLabel.setAttribute(`for`, `item-${itemCounter}-amount`);
+        amountLabel.innerHTML = `<span class="bi bi-123"></span>`;
+
+        let amountInput = document.createElement(`input`);
+        amountInput.classList.add(`form-control`, `w-25`);
+        amountInput.setAttribute(`type`, `number`);
+        amountInput.setAttribute(`name`, `item-${itemCounter}-amount`);
+        amountInput.setAttribute(`id`, `item-${itemCounter}-amount`);
+        amountInput.setAttribute(`placeholder`, `Escolha uma quantidade`);
+        amountInput.setAttribute(`min`, `1`);
+        amountInput.setAttribute(`value`, `1`);
+
+        let deleteButton = document.createElement(`button`);
+        deleteButton.classList.add(`btn`, `btn-dark`, `shadow-sm`);
+        deleteButton.setAttribute(`type`, `button`);
+        deleteButton.innerHTML = `<span class="bi bi-trash"></span>`;
+        deleteButton.addEventListener(`click`, () => deleteItem(`item-${current}`));
+
+        inputGroup.appendChild(itemLabel);
+        inputGroup.appendChild(itemSelect);
+        inputGroup.appendChild(amountLabel);
+        inputGroup.appendChild(amountInput);
+
+        container.appendChild(inputGroup);
+        container.appendChild(deleteButton);
+
+        document.getElementById(`itens-container`).appendChild(container);
+
+        itemCounter++;
+
+    }
+
+    function deleteItem(id) {
+        document.getElementById(id).remove();
+    }
+
 </script>
 
 <%- include(`../partials/footer.ejs`) %>

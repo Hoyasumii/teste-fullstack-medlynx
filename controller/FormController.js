@@ -5,13 +5,22 @@ const api = require(`../model/api`);
 
 router.get(`/nova-consulta`, (req, res) => {
 
-    api.get(`/pessoas`).then(response => {
-        res.render('form/novaConsulta', {
-            title: 'Novo Atendimento',
-            patients: response.data,
-            cpfFormatter: require(`../public/scripts/cpfFormatter`)
+    let pessoas = api.get(`/pessoas`);
+    let itens = api.get(`/itens`);
+
+    Promise.all([pessoas, itens]).then(response => {
+        let pessoas = response[0].data;
+        let itens = response[1].data;
+
+        res.render(`form/novaConsulta`, {
+            title: `Novo Atendimento`,
+            patients: pessoas,
+            cpfFormatter: require(`../public/scripts/cpfFormatter`),
+            moneyFormatter: require(`../public/scripts/moneyFormatter`),
+            itens: itens
         });
-    })
-})
+    });
+
+});
 
 module.exports = router;

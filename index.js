@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
+/* TODO: Antes de enviar, adicionar um validador para esses formulários */
+
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
