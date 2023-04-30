@@ -15,7 +15,7 @@ img[src="/logo.png"] {
 }
 
 @media(min-width: 768px) { /* MD BREAKPOINT */
-    .grid {
+    .grid.grid-c3 {
         grid-template-columns: 1fr 1fr 1fr;
     }
 }

@@ -61,7 +61,7 @@ router.get(`/evolucoes`, (req, res) => {
 });
 
 /*
-1. Instnciar o axios
+1. Instanciar o axios
 2. Fazer a requisição para a API
 3. Pegar o resultado da requisição
 4. Contar a quantidade de propriedades do objeto

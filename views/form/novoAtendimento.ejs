@@ -1,9 +1,9 @@
 <%- include(`../partials/header.ejs`) %>
 
 <div class="container my-3">
-    <form action="" method="post" class="d-flex flex-column gap-3">
+    <form action="/form/novo-atendimento" method="post" class="d-flex flex-column gap-3">
         
-        <h1 class="display-5">Nova Consulta</h1>
+        <h1 class="display-5">Novo Atendimento</h1>
         <hr class="my-0">
 
         <div>
@@ -18,15 +18,25 @@
             </div>
         </div>
 
-        <div>
-            <label for="appointment_date" class="mb-1">Data da Consulta</label>
-            <div class="input-group shadow-sm">
-                <div class="input-group-text"><span class="bi bi-calendar"></span></div>
-                <input type="date" name="data_atendimento" id="appointment_date" class="form-control" onkeydown="return false" required>
-            </div>
-        </div>
+        <div class="grid">
 
-        <br>
+            <div>
+                <label for="appointment_date" class="mb-1">Data da Consulta</label>
+                <div class="input-group shadow-sm">
+                    <label for="appointment_date" class="input-group-text"><span class="bi bi-calendar"></span></label>
+                    <input type="date" name="data_atendimento" id="appointment_date" class="form-control" onkeydown="return false" required>
+                </div>
+            </div>
+
+            <div>
+                <label for="appointment_time" class="mb-1">Horário da Consulta</label>
+                <div class="input-group shadow-sm">
+                    <label for="appointment_time" class="input-group-text"><span class="bi bi-clock"></span></label>
+                    <input type="time" step="2" name="horario_atendimento" id="appointment_time" class="form-control" onkeydown="return false" required>
+                </div>
+            </div>
+
+        </div>
         
         <div id="add-item-container" class="d-flex justify-content-between align-items-center">
             <h1 class="display-6 m-0">Itens selecionados</h1>
@@ -35,19 +45,16 @@
 
         <hr class="m-0">
 
-        <div id="itens-container" class="d-flex flex-column gap-3">
+        <div id="itens-container" class="grid">
             
         </div>
 
         <hr class="m-0">
 
-        <button class="btn btn-dark">Cadastrar nova consulta</button>
+        <button class="btn btn-dark">Cadastrar novo atendimento</button>
 
-
-
-        <!-- TODO: Itens para registar: Exemplo, adicionar um botão para adicionar itens e esses botões serão de adição. Adicionando um novo item, será exibido um select com as opções referentes aos itens + a quantidade desejada. -->
-        <!-- TODO: Ver como isso pode ser implementado num formulário -->
-        <!-- TODO: Eu preciso criar um sistema que impeça que o usuário consiga escolher o item mais de uma vez? -->
+        <!-- TODO: Eu preciso criar um sistema que impeça que o usuário consiga escolher o item mais de uma vez? E se, quando eu enviar esses dados e houver repetição, eu apenas somar e enviar para a api? -->
+        <!-- TODO: Criar um Modal de Confirmação? -->
 
     </form>
 </div>
@@ -55,6 +62,8 @@
 <script>
     appointment_date.min = new Date().toISOString().split("T")[0];
     appointment_date.value = new Date().toISOString().split("T")[0];
+
+    appointment_time.value = `08:00:00`;
 
     let itemCounter = 1;
 
@@ -77,7 +86,7 @@
         let hasSelected = false;
 
         let itemSelect = document.createElement(`select`);
-        itemSelect.classList.add(`form-control`, `w-50`);
+        itemSelect.classList.add(`form-control`, `w-75`);
         itemSelect.setAttribute(`name`, `item-${itemCounter}-name`);
         itemSelect.setAttribute(`id`, `item-${itemCounter}-name`);
         itemSelect.innerHTML = `
@@ -86,19 +95,15 @@
             <% }); %>
         `;
 
-        let amountLabel = document.createElement(`label`);
-        amountLabel.classList.add(`input-group-text`);
-        amountLabel.setAttribute(`for`, `item-${itemCounter}-amount`);
-        amountLabel.innerHTML = `<span class="bi bi-123"></span>`;
-
         let amountInput = document.createElement(`input`);
-        amountInput.classList.add(`form-control`, `w-25`);
+        amountInput.classList.add(`form-control`, `w-min`);
         amountInput.setAttribute(`type`, `number`);
         amountInput.setAttribute(`name`, `item-${itemCounter}-amount`);
         amountInput.setAttribute(`id`, `item-${itemCounter}-amount`);
         amountInput.setAttribute(`placeholder`, `Escolha uma quantidade`);
         amountInput.setAttribute(`min`, `1`);
         amountInput.setAttribute(`value`, `1`);
+        amountInput.onkeydown = () => false;
 
         let deleteButton = document.createElement(`button`);
         deleteButton.classList.add(`btn`, `btn-dark`, `shadow-sm`);
@@ -108,7 +113,6 @@
 
         inputGroup.appendChild(itemLabel);
         inputGroup.appendChild(itemSelect);
-        inputGroup.appendChild(amountLabel);
         inputGroup.appendChild(amountInput);
 
         container.appendChild(inputGroup);
