@@ -7,6 +7,8 @@ const cpfFormatter = require(`../public/scripts/formatters/cpfFormatter`);
 const moneyFormatter = require(`../public/scripts/formatters/moneyFormatter`);
 const dataFormatter = require(`../public/scripts/formatters/dataFormatter`);
 
+const getNumberFromMoney = require(`../public/scripts/getNumberFromMoney`);
+
 router.get(`/novo-atendimento`, (req, res) => {
 
     let pessoas = api.get(`/pessoas`);
@@ -25,91 +27,6 @@ router.get(`/novo-atendimento`, (req, res) => {
             itens: itens
         });
     });
-});
-
-router.post(`/novo-atendimento`, (req, res) => {
-
-    let data = req.body;
-
-    let dataAtendimento = new Date(`${data.data_atendimento} ${data.horario_atendimento}`);
-    dataAtendimento.setHours(dataAtendimento.getHours() - 3); // Horário de Brasília\
-
-    let itensSelecionados = [];
-
-    // 1. Pegar todas as chave do objeto data
-    let keys = Object.keys(data);
-
-    // 2. Filtrar as chaves que começam com "item"
-    let itemNames = keys.filter(key => key.startsWith(`item`) && key.endsWith(`-name`));
-    let itemAmounts = keys.filter(key => key.startsWith(`item`) && key.endsWith(`-amount`));
-
-    // 3. Percorrer as chaves selecionadas, agrupá-las e adicionar no array de itens
-    for (let index = 0; index < itemNames.length; index++) {
-
-        // 4. Vendo se o item já existe no array de itens
-        if (itensSelecionados.find(item => item.id_item == data[itemNames[index]])) {
-
-            // 5. Se existir, somar a quantidade
-            let item = itensSelecionados.find(item => item.id_item == data[itemNames[index]])
-            item.quantidade = `${parseInt(item.quantidade) + parseInt(data[itemAmounts[index]])}`;
-            continue;
-
-        }
-
-        itensSelecionados.push({
-            id_item: data[itemNames[index]],
-            quantidade: data[itemAmounts[index]]
-        })
-
-    }
-
-    // let json = {
-    //     id_pessoa: data.id_pessoa,
-    //     data_atendimento: dataAtendimento,
-    //     itens: itensSelecionados
-    // }
-
-    /* api.post(`/atendimentos/new`, json).then(response => {
-        res.redirect(`/`);
-    }) */
-
-    let usuario = api.get(`/pessoas/${data.id_pessoa}`);
-    let itens = api.get(`/itens`);
-
-    Promise.all([usuario, itens]).then(response => {
-        let usuario = response[0].data;
-        let itens = response[1].data;
-
-        let columns = null;
-        let data = null;
-
-        if (itensSelecionados.length > 0) {
-            itensSelecionados = itensSelecionados.map(item => {
-                return {
-                    "Descrição": itens.find(i => i.id_item == item.id_item).descricao,
-                    "Quantidade": item.quantidade,
-                    "Valor unitário": itens.find(i => i.id_item == item.id_item).valor,
-                    "Valor a ser pago": item.quantidade * itens.find(i => i.id_item == item.id_item).valor
-                }
-            });
-
-            columns = Object.keys(itensSelecionados[0]);
-            data = itensSelecionados;
-            
-        }
-        
-        res.render(`form/confirmacao`, {
-            columns: columns,
-            data: data,
-            title: `Confirmação de atendimento`,
-            usuario: usuario,
-            dataAtendimento: dataAtendimento,
-            dataFormatter: dataFormatter,
-            moneyFormatter: moneyFormatter
-        });
-
-    });
-
 });
 
 router.post(`/criando-atendimento`, async (req, res) => {
@@ -148,8 +65,8 @@ router.post(`/criando-atendimento`, async (req, res) => {
             dadosDocumento.push({
                 "Descrição": item.descricao,
                 "Quantidade": newItens[index].quantidade,
-                "Valor unitário": item.valor,
-                "Valor a ser pago": newItens[index].quantidade * item.valor
+                "Valor unitário": moneyFormatter(item.valor),
+                "Valor a ser pago": moneyFormatter(newItens[index].quantidade * item.valor)
             })
         })
 
@@ -161,11 +78,27 @@ router.post(`/criando-atendimento`, async (req, res) => {
             },
             dados_documento: {
                 usuario: usuario,
-                itens: dadosDocumento
+                itens: dadosDocumento,
+                data_atendimento: dataFormatter(new Date(body.data_atendimento)),
+                total: moneyFormatter(dadosDocumento.reduce((acc, cur) => acc + getNumberFromMoney(cur[`Valor a ser pago`]), 0))
             }
         });
     });
-    
+});
+
+router.post(`/realizando-atendimento`, (req, res) => {
+    let body = req.body;
+
+    let itens = JSON.parse(body.itens);
+
+    api.post(`/atendimentos/new`, {
+        id_pessoa: body.id_pessoa,
+        data_atendimento: new Date(body.data_atendimento),
+        itens: itens
+    }).then(response => {
+        res.redirect(`/`);
+    });
+
 });
 
 module.exports = router;

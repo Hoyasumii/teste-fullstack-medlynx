@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const app = express();
 
 /* TODO: Antes de enviar, adicionar um validador para esses formulários */
-/* TODO: Adicionar o moneyFormatter no read de pages que usam dinheiro como o data/itens-disponiveis */
+/* TODO: Antes de enviar, checar o nome das variáveis e deixá-las apenas no inglês. */
 
 app.use(express.static('public'));
 app.set('view engine', 'ejs');

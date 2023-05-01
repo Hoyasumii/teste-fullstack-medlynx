@@ -1,7 +1,6 @@
 <%- include(`../partials/header.ejs`) %>
 
 <!-- TODO: Perguntar a Brenno se o input date precisa ter apenas as datas futuras, ou as passadas também -->
-<!-- TODO: Depois tentar pegar confirmacao.ejs e colocar num Modal aqui mesmo para deixar dinâmico -->
 
 <div class="container my-3"> 
 
@@ -19,7 +18,7 @@
 
         <div>
             <label for="patient-name" class="mb-1">Nome do Paciente</label>
-            <div class="input-group shadow-sm">
+            <div class="input-group">
                 <label for="patient-name" class="input-group-text"><span class="bi bi-person"></span></label>
                 <select name="id_pessoa" id="patient-name" class="form-control">
                     <% patients.forEach( patient => { %>
@@ -33,7 +32,7 @@
 
             <div>
                 <label for="appointment_date" class="mb-1">Data da Consulta</label>
-                <div class="input-group shadow-sm">
+                <div class="input-group">
                     <label for="appointment_date" class="input-group-text"><span class="bi bi-calendar"></span></label>
                     <input type="date" name="data_atendimento" id="appointment_date" class="form-control" onkeydown="return false" required>
                 </div>
@@ -41,7 +40,7 @@
 
             <div>
                 <label for="appointment_time" class="mb-1">Horário da Consulta</label>
-                <div class="input-group shadow-sm">
+                <div class="input-group">
                     <label for="appointment_time" class="input-group-text"><span class="bi bi-clock"></span></label>
                     <input type="time" name="horario_atendimento" id="appointment_time" class="form-control" onkeydown="return false" >
                 </div>
@@ -62,37 +61,23 @@
 
         <hr class="m-0">
 
-        <button class="btn btn-dark" onclick="gettingData()">Cadastrar novo atendimento</button>
+        <button class="btn btn-dark" onclick="gettingData()" data-bs-toggle="modal" data-bs-target="#exampleModal">Realizar atendimento</button>
     </div>
 
-    <br><br>
-
-    <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">Exibir Modal</button>
-
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-lg fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
+                    <h5 class="modal-title">Deseja realizar o atendimento?</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="d-flex align-items-center justify-content-center gap-1">
-                        <div class="spinner-border" status>
-                            <span class="visually-hidden"></span>
-                        </div>
-                    </div>
+                <div class="modal-body d-flex flex-column gap-3" id="modal-body">
+                    
                 </div>
-                <!-- <div class="modal-footer">
-                    <button class="btn btn-dark">Enviar</button>
-                </div> -->
             </div>
         </div>
     </div>
 
-    <div id="app"></div>
-
-    
 </div>
 
 <script src="/scripts/document/novoAtendimento.js"></script>
@@ -101,8 +86,6 @@
     document.getElementById(`add-item-button`).addEventListener(`click`, () => {
         addItem(`<%- JSON.stringify(itens) %>`)
     })
-
-
 </script>
 
 <%- include(`../partials/footer.ejs`) %>
