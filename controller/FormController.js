@@ -112,8 +112,60 @@ router.post(`/novo-atendimento`, (req, res) => {
 
 });
 
-router.get(`/criando-atendimento`, (req, res) => {
+router.post(`/criando-atendimento`, async (req, res) => {
+    let body = req.body;
 
+    let itens = body.itens;
+    let newItens = [];
+
+    // Caso eu tenha mais de um elemento com o mesmo id_item, eu some as quantidades
+    itens.forEach(item => {
+        let index = newItens.findIndex(i => i.id_item == item.id_item);
+        if (index == -1) {
+            newItens.push(item);
+        } else {
+            newItens[index] = {
+                id_item: item.id_item,
+                quantidade: `${parseInt(newItens[index].quantidade) + parseInt(item.quantidade)}`
+            }
+        }
+    })
+
+    let usuario = api.get(`/pessoas/${body.id_pessoa}`);
+    let itensSelecionados = [...newItens].map(item => {
+        return api.get(`/itens/${item.id_item}`)
+    });
+
+    Promise.all([usuario, ...itensSelecionados]).then(response => {
+
+        let usuario = response[0].data;
+        let itens = response.slice(1).map(item => item.data);
+
+        let dadosDocumento = [];
+
+        itens.forEach(item => {
+            let index = newItens.findIndex(i => i.id_item == item.id_item);
+            dadosDocumento.push({
+                "Descrição": item.descricao,
+                "Quantidade": newItens[index].quantidade,
+                "Valor unitário": item.valor,
+                "Valor a ser pago": newItens[index].quantidade * item.valor
+            })
+        })
+
+        res.status(200).send({
+            dados_formulario: {
+                id_pessoa: body.id_pessoa,
+                data_atendimento: body.data_atendimento,
+                itens: newItens,
+            },
+            dados_documento: {
+                usuario: usuario,
+                itens: dadosDocumento
+            }
+        });
+    });
+    
 });
 
 module.exports = router;

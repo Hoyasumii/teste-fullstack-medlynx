@@ -81,7 +81,7 @@ function deleteItem(id) {
     document.getElementById(id).remove();
 }
 
-function gettingData() {
+async function gettingData() {
 
     let id_pessoa = document.getElementById(`patient-name`).value;
 
@@ -112,6 +112,18 @@ function gettingData() {
         data_atendimento,
         itens: selectedItens
     };
+
+    await fetch(`/form/criando-atendimento`, {
+        method: `POST`,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    }).then(response => {
+        return response.json();
+    }).then(data => {
+        console.log(data);
+    })
 
     // TODO: Criar uma rota para pegar os dados necessários e enviar para o modal
 
