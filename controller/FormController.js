@@ -132,9 +132,18 @@ router.post(`/criando-evolucao`, (req, res) => {
 
     let id_atendimento = body.id_atendimento;
 
-    // TODO: Adicionar aqui o negócio da data
+    let data = new Date(`${body.appointment_date} ${body.appointment_time}`);
+    data.setHours(data.getHours() - 3); // Horário de Brasília
 
     let descricao = body.descricao;
+
+    api.post(`/evolucao/new` ,{
+        id_atendimento: id_atendimento,
+        data: data,
+        descricao: descricao
+    }).then(response => {
+        res.redirect(`/`);
+    })
 
 });
 

@@ -2,8 +2,6 @@
 
 <!-- TODO: Perguntar a Brenno se o input date precisa ter apenas as datas futuras, ou as passadas também -->
 
-<!-- TODO: Adicionar somente os hr.my-0 após eu adicionar o primeiro item. Enquanto nenhum item tiver sido criado, não colocar nada no DOM -->
-
 <div class="container my-3"> 
 
     <div class="d-flex flex-column gap-3">
@@ -48,13 +46,9 @@
             <button type="button" class="btn btn-dark" id="add-item-button"><span class="bi bi-plus"></span> Adicionar item</button>
         </div>
 
-        <hr class="m-0">
+        <div class="d-flex flex-column gap-3" id="place">
 
-        <div id="itens-container" class="grid">
-            
         </div>
-
-        <hr class="m-0">
 
         <button class="btn btn-dark" onclick="gettingData()" data-bs-toggle="modal" data-bs-target="#exampleModal">Realizar atendimento</button>
     </div>

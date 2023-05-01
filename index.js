@@ -3,8 +3,9 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-/* TODO: Antes de enviar, adicionar um validador para esses formulários */
 /* TODO: Antes de enviar, checar o nome das variáveis e deixá-las apenas no inglês. */
+
+// TODO: Melhorar o Menu principal
 
 /* TODO:
     Esse requisito 2 dá pra fazer d+:

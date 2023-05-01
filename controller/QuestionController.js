@@ -58,8 +58,6 @@ router.get(`/3`, (req, res) => {
     let itens = api.get(`/itens`);
     let evolucao = api.get(`/evolucao`);
 
-    // TODO: Criar uma versão melhorada para identificar outos medicamentos que possam causar reação alérgica grave além de Dipirona CX
-
     Promise.all([pacientes, atendimentos, lancamentos, itens, evolucao]).then(response => {
 
         // Por que eu usei os index ao invés de me dirigir ao ../id? Pelo motivo de facilitar os processos, já que, eu procurando os dados a partir de uma única requisição, eu pouparia tempo de execução.

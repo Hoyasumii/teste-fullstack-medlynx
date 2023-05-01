@@ -71,6 +71,20 @@ function addItem(itemList) {
     container.appendChild(inputGroup);
     container.appendChild(deleteButton);
 
+    if (itemCounter == 1) {
+        let hr1 = document.createElement(`hr`);
+        hr1.classList.add(`my-0`);
+
+        let hr2 = document.createElement(`hr`);
+        hr2.classList.add(`my-0`);
+
+        let itensContainer = document.createElement(`div`);
+        itensContainer.id = `itens-container`;
+        itensContainer.classList.add(`grid`);
+
+        document.getElementById(`place`).append(hr1, itensContainer, hr2);
+    }
+
     document.getElementById(`itens-container`).appendChild(container);
 
     itemCounter++;
@@ -173,7 +187,7 @@ function creatingModal(data) {
 
     if (itens.length > 0) {
         let itensTable = document.createElement(`table`);
-        itensTable.classList.add(`table`, `table-striped`, `table-hover`, `table-bordered`);
+        itensTable.classList.add(`table`, `table-hover`, `table-bordered`);
         
         let titleDiv = document.createElement(`div`);
 
