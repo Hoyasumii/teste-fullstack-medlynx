@@ -147,8 +147,6 @@ async function gettingData() {
 
 }
 
-// TODO: Não me esquecer de adicionar os input hidden com os valores e o botão de realizar estar dentro de um formulário
-
 function creatingModal(data) {
 
     if (!document.getElementById(`loading`)) {
@@ -230,8 +228,6 @@ function creatingModal(data) {
         noItensDiv.innerText = `Nenhum item foi selecionado`;
         container.append(noItensDiv);
     }
-
-    /* TODO: Adicionar aqui os inputs */
 
     let form = document.createElement(`form`);
     form.setAttribute(`method`, `POST`);

@@ -1,0 +1,52 @@
+<%- include(`../partials/header.ejs`) %>
+
+<div class="container my-3">
+    <div class="d-flex flex-column gap-3">
+
+        <h1 class="display-5">Nova Evolução</h1>
+        <hr class="my-0">
+
+        <form action="" method="post" class="d-flex flex-column gap-3" id="form" novalidate>
+            <div class="grid">
+                <div>
+                    <label for="appointment_id" class="mb-1">Deseja atualizar qual atendimento?</label>
+                    <div class="input-group">
+                        <label for="appointment_id" class="input-group-text"><span class="bi bi-person"></span></label>
+                        <select name="id_atendimento" id="appointment_id" class="form-control">
+                            <% data.forEach(item => { %>
+                                <option value="<%= item.id_atendimento %>">Atendimento <%= item.id_atendimento %> - <%= item.nome %> - <%= item.data_atendimento %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+                </div>
+    
+                <div>
+                    <label for="appointment_date" class="mb-1">Data da atualização</label>
+                    <div class="input-group">
+                        <label for="appointment_date" class="input-group-text"><span class="bi bi-calendar"></span></label>
+                        <input type="date" name="appointment_date" id="appointment_date" class="form-control" onkeydown="return false" required>
+                        <label for="appointment_time" class="input-group-text"><span class="bi bi-clock"></span></label>
+                        <input type="time" name="appointment_time" id="appointment_time" class="form-control" onkeydown="return false" required>
+                    </div>
+                </div>            
+            </div>
+    
+            <div>
+                <label for="description" class="mb-1">Descrição</label>
+                <textarea name="descricao" id="description" cols="30" rows="3" class="form-control" placeholder="Descreva aqui o que mudou no estado do paciente" required></textarea>
+                <div class="invalid-feedback">Você precisa informar o que mudou no estado do paciente!</div>
+            </div>
+    
+            <button type="submit" class="btn btn-dark">Registrar evolução</button>
+        </form>
+    </div>
+</div>
+
+<script src="/scripts/document/novaEvolucao.js"></script>
+
+<script>
+    
+</script>
+
+
+<%- include(`../partials/footer.ejs`) %>

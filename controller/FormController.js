@@ -101,4 +101,41 @@ router.post(`/realizando-atendimento`, (req, res) => {
 
 });
 
+router.get(`/nova-evolucao`, (req, res) => {
+
+    let atendimentos = api.get(`/atendimentos`);
+    let pessoas = api.get(`/pessoas`);
+
+    Promise.all([atendimentos, pessoas]).then(response => {
+        let atendimentos = response[0].data;
+        let pessoas = response[1].data;
+
+        let data = atendimentos.map(atendimento => {
+            return {
+                id_atendimento: atendimento.id_atendimento,
+                id_pessoa: atendimento.id_pessoa,
+                data_atendimento: dataFormatter(new Date(atendimento.data_atendimento), false),
+                nome: pessoas.find(pessoa => pessoa.id_pessoa == atendimento.id_pessoa).nome
+            }
+        });
+
+        res.render(`form/novaEvolucao`, {
+            title: `Nova Evolução`,
+            data: data
+        });
+    });
+});
+
+router.post(`/criando-evolucao`, (req, res) => {
+
+    let body = req.body;
+
+    let id_atendimento = body.id_atendimento;
+
+    // TODO: Adicionar aqui o negócio da data
+
+    let descricao = body.descricao;
+
+});
+
 module.exports = router;
