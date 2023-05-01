@@ -3,6 +3,10 @@ const router = express.Router();
 
 const api = require(`../model/api`);
 
+const cpfFormatter = require(`../public/scripts/formatters/cpfFormatter`);
+const moneyFormatter = require(`../public/scripts/formatters/moneyFormatter`);
+const dataFormatter = require(`../public/scripts/formatters/dataFormatter`);
+
 router.get(`/novo-atendimento`, (req, res) => {
 
     let pessoas = api.get(`/pessoas`);
@@ -15,8 +19,9 @@ router.get(`/novo-atendimento`, (req, res) => {
         res.render(`form/novoAtendimento`, {
             title: `Novo Atendimento`,
             patients: pessoas,
-            cpfFormatter: require(`../public/scripts/cpfFormatter`),
-            moneyFormatter: require(`../public/scripts/moneyFormatter`),
+            cpfFormatter: cpfFormatter,
+            moneyFormatter: moneyFormatter,
+            dataFormatter: dataFormatter,
             itens: itens
         });
     });
@@ -29,7 +34,7 @@ router.post(`/novo-atendimento`, (req, res) => {
     let dataAtendimento = new Date(`${data.data_atendimento} ${data.horario_atendimento}`);
     dataAtendimento.setHours(dataAtendimento.getHours() - 3); // Horário de Brasília\
 
-    let itens = [];
+    let itensSelecionados = [];
 
     // 1. Pegar todas as chave do objeto data
     let keys = Object.keys(data);
@@ -42,31 +47,72 @@ router.post(`/novo-atendimento`, (req, res) => {
     for (let index = 0; index < itemNames.length; index++) {
 
         // 4. Vendo se o item já existe no array de itens
-        if (itens.find(item => item.id_item == data[itemNames[index]])) {
+        if (itensSelecionados.find(item => item.id_item == data[itemNames[index]])) {
 
             // 5. Se existir, somar a quantidade
-            let item = itens.find(item => item.id_item == data[itemNames[index]])
+            let item = itensSelecionados.find(item => item.id_item == data[itemNames[index]])
             item.quantidade = `${parseInt(item.quantidade) + parseInt(data[itemAmounts[index]])}`;
             continue;
 
         }
 
-        itens.push({
+        itensSelecionados.push({
             id_item: data[itemNames[index]],
             quantidade: data[itemAmounts[index]]
         })
 
     }
 
-    let json = {
-        id_pessoa: data.id_pessoa,
-        data_atendimento: dataAtendimento,
-        itens: itens
-    }
+    // let json = {
+    //     id_pessoa: data.id_pessoa,
+    //     data_atendimento: dataAtendimento,
+    //     itens: itensSelecionados
+    // }
 
-    api.post(`/atendimentos/new`, json).then(response => {
+    /* api.post(`/atendimentos/new`, json).then(response => {
         res.redirect(`/`);
-    })
+    }) */
+
+    let usuario = api.get(`/pessoas/${data.id_pessoa}`);
+    let itens = api.get(`/itens`);
+
+    Promise.all([usuario, itens]).then(response => {
+        let usuario = response[0].data;
+        let itens = response[1].data;
+
+        let columns = null;
+        let data = null;
+
+        if (itensSelecionados.length > 0) {
+            itensSelecionados = itensSelecionados.map(item => {
+                return {
+                    "Descrição": itens.find(i => i.id_item == item.id_item).descricao,
+                    "Quantidade": item.quantidade,
+                    "Valor unitário": itens.find(i => i.id_item == item.id_item).valor,
+                    "Valor a ser pago": item.quantidade * itens.find(i => i.id_item == item.id_item).valor
+                }
+            });
+
+            columns = Object.keys(itensSelecionados[0]);
+            data = itensSelecionados;
+            
+        }
+        
+        res.render(`form/confirmacao`, {
+            columns: columns,
+            data: data,
+            title: `Confirmação de atendimento`,
+            usuario: usuario,
+            dataAtendimento: dataAtendimento,
+            dataFormatter: dataFormatter,
+            moneyFormatter: moneyFormatter
+        });
+
+    });
+
+});
+
+router.get(`/criando-atendimento`, (req, res) => {
 
 });
 

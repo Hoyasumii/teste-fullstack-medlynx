@@ -3,8 +3,9 @@ const router = express.Router();
 
 const api = require(`../model/api`);
 
-const groupBy = require(`../public/scripts/groupBy`);
-const cpfFormatter = require(`../public/scripts/cpfFormatter`);
+const moneyFormatter = require(`../public/scripts/formatters/moneyFormatter`);
+const getNumberFromMoney = require(`../public/scripts/getNumberFromMoney`);
+const cpfFormatter = require(`../public/scripts/formatters/cpfFormatter`);
 
 router.get(`/1`, (req, res) => {
 
@@ -27,14 +28,14 @@ router.get(`/1`, (req, res) => {
                     id_item: item.id_item,
                     descricao: item.descricao,
                     quantidade: parseInt(lancamento.quantidade),
-                    valor_unitario: `R$${item.valor.replace(".", ",")}`
+                    valor_unitario: moneyFormatter(item.valor)
                 });
             }
         });
 
         itensConsumidos.forEach(itemConsumido => {
-            valorUnitario = parseFloat(itemConsumido.valor_unitario.replace("R$", "").replace(",", "."));
-            itemConsumido.valor_total = `R$${(valorUnitario * itemConsumido.quantidade).toFixed(2).replace(".", ",")}`;
+            let valorUnitario = getNumberFromMoney(itemConsumido.valor_unitario);
+            itemConsumido.valor_total = moneyFormatter(valorUnitario * itemConsumido.quantidade);
         });
 
         itensConsumidos.sort((a, b) => b.quantidade - a.quantidade);

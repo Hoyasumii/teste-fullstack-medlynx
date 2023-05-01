@@ -1,7 +1,18 @@
 <%- include(`../partials/header.ejs`) %>
 
-<div class="container my-3">
-    <form action="/form/novo-atendimento" method="post" class="d-flex flex-column gap-3">
+<!-- TODO: Perguntar a Brenno se o input date precisa ter apenas as datas futuras, ou as passadas também -->
+<!-- TODO: Depois tentar pegar confirmacao.ejs e colocar num Modal aqui mesmo para deixar dinâmico -->
+
+<div class="container my-3"> 
+
+    <!-- 
+        Lista de alterações para implementar no modal:
+        1. Retirar o form e colocar dentro do modal.
+        2. Quando clicar em "Cadastrar novo atendimento", o modal deve abrir.
+        3. Criar uma api para pegar os dados desse formulário e retornar um json com os dados do atendimento.
+     -->
+
+    <div class="d-flex flex-column gap-3">
         
         <h1 class="display-5">Novo Atendimento</h1>
         <hr class="my-0">
@@ -32,7 +43,7 @@
                 <label for="appointment_time" class="mb-1">Horário da Consulta</label>
                 <div class="input-group shadow-sm">
                     <label for="appointment_time" class="input-group-text"><span class="bi bi-clock"></span></label>
-                    <input type="time" step="2" name="horario_atendimento" id="appointment_time" class="form-control" onkeydown="return false" required>
+                    <input type="time" name="horario_atendimento" id="appointment_time" class="form-control" onkeydown="return false" >
                 </div>
             </div>
 
@@ -40,7 +51,7 @@
         
         <div id="add-item-container" class="d-flex justify-content-between align-items-center">
             <h1 class="display-6 m-0">Itens selecionados</h1>
-            <button type="button" class="btn btn-dark" id="add-item-button" onclick="addItem()"><span class="bi bi-plus"></span> Adicionar item</button>
+            <button type="button" class="btn btn-dark" id="add-item-button"><span class="bi bi-plus"></span> Adicionar item</button>
         </div>
 
         <hr class="m-0">
@@ -51,83 +62,43 @@
 
         <hr class="m-0">
 
-        <button class="btn btn-dark">Cadastrar novo atendimento</button>
+        <button class="btn btn-dark" onclick="gettingData()">Cadastrar novo atendimento</button>
+    </div>
 
-        <!-- TODO: Eu preciso criar um sistema que impeça que o usuário consiga escolher o item mais de uma vez? E se, quando eu enviar esses dados e houver repetição, eu apenas somar e enviar para a api? -->
-        <!-- TODO: Criar um Modal de Confirmação? -->
+    <br><br>
 
-    </form>
+    <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">Exibir Modal</button>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex align-items-center justify-content-center gap-1">
+                        <div class="spinner-border" status>
+                            <span class="visually-hidden"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button class="btn btn-dark">Enviar</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    
 </div>
 
+<script src="/scripts/document/novoAtendimento.js"></script>
+
 <script>
-    appointment_date.min = new Date().toISOString().split("T")[0];
-    appointment_date.value = new Date().toISOString().split("T")[0];
-
-    appointment_time.value = `08:00:00`;
-
-    let itemCounter = 1;
-
-    function addItem() {
-
-        let current = itemCounter;
-
-        let container = document.createElement(`div`);
-        container.classList.add(`bg-body-tertiary`, `p-3`, `border`, `rounded`, `d-flex`, `align-items-center`, `justify-content-between`, `shadow-sm`, `gap-3`);
-        container.id = `item-${itemCounter}`;
-
-        let inputGroup = document.createElement(`div`);
-        inputGroup.classList.add(`input-group`, `selected-itens`);
-
-        let itemLabel = document.createElement(`label`);
-        itemLabel.classList.add(`input-group-text`);
-        itemLabel.setAttribute(`for`, `item-${itemCounter}-name`);
-        itemLabel.innerHTML = `<span class="bi bi-capsule"></span>`;
-
-        let hasSelected = false;
-
-        let itemSelect = document.createElement(`select`);
-        itemSelect.classList.add(`form-control`, `w-75`);
-        itemSelect.setAttribute(`name`, `item-${itemCounter}-name`);
-        itemSelect.setAttribute(`id`, `item-${itemCounter}-name`);
-        itemSelect.innerHTML = `
-            <% itens.forEach( item => { %>
-                <option value="<%= item.id_item %>"><%= item.descricao %> - <%= moneyFormatter(item.valor) %></option>
-            <% }); %>
-        `;
-
-        let amountInput = document.createElement(`input`);
-        amountInput.classList.add(`form-control`, `w-min`);
-        amountInput.setAttribute(`type`, `number`);
-        amountInput.setAttribute(`name`, `item-${itemCounter}-amount`);
-        amountInput.setAttribute(`id`, `item-${itemCounter}-amount`);
-        amountInput.setAttribute(`placeholder`, `Escolha uma quantidade`);
-        amountInput.setAttribute(`min`, `1`);
-        amountInput.setAttribute(`value`, `1`);
-        amountInput.onkeydown = () => false;
-
-        let deleteButton = document.createElement(`button`);
-        deleteButton.classList.add(`btn`, `btn-dark`, `shadow-sm`);
-        deleteButton.setAttribute(`type`, `button`);
-        deleteButton.innerHTML = `<span class="bi bi-trash"></span>`;
-        deleteButton.addEventListener(`click`, () => deleteItem(`item-${current}`));
-
-        inputGroup.appendChild(itemLabel);
-        inputGroup.appendChild(itemSelect);
-        inputGroup.appendChild(amountInput);
-
-        container.appendChild(inputGroup);
-        container.appendChild(deleteButton);
-
-        document.getElementById(`itens-container`).appendChild(container);
-
-        itemCounter++;
-
-    }
-
-    function deleteItem(id) {
-        document.getElementById(id).remove();
-    }
-
+    document.getElementById(`add-item-button`).addEventListener(`click`, () => {
+        addItem(`<%- JSON.stringify(itens) %>`)
+    })
 </script>
 
 <%- include(`../partials/footer.ejs`) %>

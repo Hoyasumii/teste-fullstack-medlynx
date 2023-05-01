@@ -3,6 +3,8 @@ const router = express.Router();
 
 const api = require(`../model/api`);
 
+const moneyFormatter = require(`../public/scripts/formatters/moneyFormatter`);
+
 router.get(`/`, (req, res) => {
     res.render(`data/index`, {
         title: "Consultar dados"
@@ -32,6 +34,11 @@ router.get(`/atendimentos`, (req, res) => {
 
 router.get(`/itens-disponiveis`, (req, res) => {
     api.get(`/itens`).then(response => {
+
+        response.data.forEach(item => {
+            item.valor = moneyFormatter(item.valor);
+        })
+
         res.render(`read`, {
             columns: Object.keys(response.data[0]),
             data: response.data.sort((a, b) => a.id_item - b.id_item),
