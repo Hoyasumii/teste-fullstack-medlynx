@@ -8,6 +8,16 @@ img[src="/logo.png"] {
     grid-gap: 10px;
 }
 
+.btn {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+}
+
 @media(min-width: 576px) { /* SM BREAKPOINT */
     .grid {
         grid-template-columns: 1fr 1fr;

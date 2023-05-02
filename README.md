@@ -1,0 +1,1 @@
+TODO: Criar um menu, explicando a estrutura do projeto + guia para encontrar as soluções dos Requisitos.

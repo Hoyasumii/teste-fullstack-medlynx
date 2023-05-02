@@ -1,4 +1,5 @@
 let now = new Date(Date.now());
+let date = `${now.getFullYear()}-${addZero(now.getMonth() + 1)}-${addZero(now.getDate())}`;
 
 function addZero(number) {
     if (number < 10 && number >= 0) {
@@ -14,8 +15,8 @@ function moneyFormatter(value, isFloat = false) {
     return `R$${parseFloat(value).toFixed(2).replace('.', ',')}`
 }
 
-appointment_date.min = now.toISOString().split("T")[0];
-appointment_date.value = now.toISOString().split("T")[0];
+appointment_date.min = date;
+appointment_date.value = date;
 
 appointment_time.value = `${addZero(now.getHours())}:${addZero(now.getMinutes())}`;
 
@@ -144,7 +145,7 @@ async function gettingData() {
         itens: selectedItens
     };
 
-    await fetch(`/form/criando-atendimento`, {
+    await fetch(`/form/novo-atendimento/1`, {
         method: `POST`,
         headers: {
             'Content-Type': 'application/json'
@@ -245,7 +246,7 @@ function creatingModal(data) {
 
     let form = document.createElement(`form`);
     form.setAttribute(`method`, `POST`);
-    form.setAttribute(`action`, `/form/realizando-atendimento`);
+    form.setAttribute(`action`, `/form/novo-atendimento/2`);
 
     let id_pessoa = document.createElement(`input`);
     id_pessoa.setAttribute(`type`, `hidden`);

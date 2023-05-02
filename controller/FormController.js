@@ -29,7 +29,7 @@ router.get(`/novo-atendimento`, (req, res) => {
     });
 });
 
-router.post(`/criando-atendimento`, async (req, res) => {
+router.post(`/novo-atendimento/1`, async (req, res) => {
     let body = req.body;
 
     let itens = body.itens;
@@ -86,10 +86,19 @@ router.post(`/criando-atendimento`, async (req, res) => {
     });
 });
 
-router.post(`/realizando-atendimento`, (req, res) => {
+router.post(`/novo-atendimento/2`, (req, res) => {
     let body = req.body;
 
     let itens = JSON.parse(body.itens);
+
+    // res.send({
+    //     id_pessoa: body.id_pessoa,
+    //     data_atendimento: body.data_atendimento,
+    //     itens: itens
+    // })
+
+    // let data_atendimento = new Date(body.data_atendimento);
+    // data_atendimento.setHours(data_atendimento.getHours() - 3);
 
     api.post(`/atendimentos/new`, {
         id_pessoa: body.id_pessoa,
@@ -110,11 +119,15 @@ router.get(`/nova-evolucao`, (req, res) => {
         let atendimentos = response[0].data;
         let pessoas = response[1].data;
 
+        
         let data = atendimentos.map(atendimento => {
+            let dataAtendimento = new Date(atendimento.data_atendimento);
+            dataAtendimento.setHours(dataAtendimento.getHours() - 3);
+
             return {
                 id_atendimento: atendimento.id_atendimento,
                 id_pessoa: atendimento.id_pessoa,
-                data_atendimento: dataFormatter(new Date(atendimento.data_atendimento), false),
+                data_atendimento: dataFormatter(dataAtendimento, false),
                 nome: pessoas.find(pessoa => pessoa.id_pessoa == atendimento.id_pessoa).nome
             }
         });
@@ -126,7 +139,7 @@ router.get(`/nova-evolucao`, (req, res) => {
     });
 });
 
-router.post(`/criando-evolucao`, (req, res) => {
+router.post(`/nova-evolucao/1`, (req, res) => {
 
     let body = req.body;
 

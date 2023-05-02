@@ -5,12 +5,6 @@ const api = require(`../model/api`);
 
 const moneyFormatter = require(`../public/scripts/formatters/moneyFormatter`);
 
-router.get(`/`, (req, res) => {
-    res.render(`data/index`, {
-        title: "Consultar dados"
-    });
-});
-
 router.get(`/pacientes`, (req, res) => {
     api.get(`/pessoas`).then(response => {
         res.render(`read`, {
