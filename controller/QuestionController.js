@@ -72,7 +72,8 @@ router.get(`/3`, (req, res) => {
         let atendimentosReacaoAlergicaGrave = evolucao.filter(evolucao => evolucao.descricao.startsWith("reação alérgica grave")).map(evolucao => {
             return {
                 id_atendimento: evolucao.id_atendimento,
-                id_pessoa: atendimentos.find(atendimento => atendimento.id_atendimento == evolucao.id_atendimento).id_pessoa
+                id_pessoa: atendimentos.find(atendimento => atendimento.id_atendimento == evolucao.id_atendimento).id_pessoa,
+                data_atendimento: atendimentos.find(atendimento => atendimento.id_atendimento == evolucao.id_atendimento).data_atendimento
             }
         })
 
@@ -102,9 +103,26 @@ router.get(`/3`, (req, res) => {
             atendimento.descricao_medicamento = lancamentosReacaoAlergicaGrave.filter(lancamento => lancamento.id_atendimento == atendimento.id_atendimento)[0].descricao;
         });
 
+        // 4. Filtrar para o ano de 2022
+        let data = atendimentosReacaoAlergicaGrave.map(atendimento => {
+            let dataAtendimento = new Date(atendimento.data_atendimento);
+
+            if (dataAtendimento.getFullYear() == 2022) {
+                return {
+                    id_atendimento: atendimento.id_atendimento,
+                    id_pessoa: atendimento.id_pessoa,
+                    data_atendimento: atendimento.data_atendimento,
+                    nome: atendimento.nome,
+                    cpf: atendimento.cpf,
+                    id_item: atendimento.id_item,
+                    descricao_medicamento: atendimento.descricao_medicamento
+                }
+            }
+        }).filter(atendimento => atendimento != undefined || atendimento != null);
+
         res.render(`read`, {
-            columns: Object.keys(atendimentosReacaoAlergicaGrave[0]),
-            data: atendimentosReacaoAlergicaGrave,
+            columns: Object.keys(data[0]),
+            data: data,
             title: "Pacientes com reação alérgica grave"
         });
 

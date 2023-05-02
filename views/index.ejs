@@ -1,28 +1,31 @@
 <%- include(`./partials/header.ejs`) %>
 
 <!-- TODO: Criar um relatório por atendimento: Valores dos itens, data + Evolução -->
+<!-- TODO: O Requisito 3 está incompleto. Na questão fala: No ano de 2022. Então, eu vou precisar pegar apenas os atendimentos que ocorreram no ano de 2022 -->
 
 <div class="container my-3 d-flex flex-column gap-3">
 
     <div class="d-flex justify-content-between align-items-center">
         <h3 class="my-0">Olá dr. Magnovaldo, o que deseja:</h3>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#data-modal">Consultar dados</button>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#data-modal">Consultar dados</button>
     </div>
 
     <hr class="my-0">
 
-    <div class="alert alert-primary my-0 shadow-sm">
+    <div class="alert alert-dark my-0 shadow-sm">
         Clique <a href="/question/1" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-100-hover"><strong>aqui</strong></a> para saber os 5 itens com maior consumo nos atendimentos.
     </div>
 
-    <div class="alert alert-primary my-0 shadow-sm">
-        Clique em <a href="/question/3" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-100-hover"><strong>aqui</strong></a> para saber quais foram os pacientes que tiveram reação alérgica grave.
+    <div class="alert alert-dark my-0 shadow-sm">
+        Clique em <a href="/question/3" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-100-hover"><strong>aqui</strong></a> para saber quais foram os pacientes que tiveram reação alérgica grave no ano de <strong>2022</strong>.
     </div>
 
     <div>
         <br>
         <h4 class="mb-0">Gerador de Relatórios</h4>
     </div>
+
+    <hr class="my-0">
     
     <div class="accordion" id="accordionExample">
         <div class="accordion-item">
@@ -39,7 +42,7 @@
                                 <option value="<%= item.id_atendimento %>">Atendimento <%= item.id_atendimento %> - <%= item.nome %> - <%= item.data_atendimento %></option>
                             <% }); %>
                         </select>
-                        <button class="btn btn-primary">Gerar</button>
+                        <button class="btn btn-dark">Gerar</button>
                     </form>
                 </div>
             </div>
