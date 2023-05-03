@@ -8,34 +8,34 @@
         
         <h1 class="display-5">Novo Atendimento</h1>
         <hr class="my-0">
-
-        <div>
-            <label for="patient-name" class="mb-1">Nome do Paciente</label>
-            <div class="input-group">
-                <label for="patient-name" class="input-group-text"><span class="bi bi-person"></span></label>
-                <select name="id_pessoa" id="patient-name" class="form-control">
+            
+        <div class="input-group">
+            <label for="patient-name" class="input-group-text"><span class="bi bi-person"></span></label>
+            <div class="form-floating">
+                <select name="id_pessoa" id="patient-name" class="form-select">
                     <% patients.forEach( patient => { %>
                         <option value="<%= patient.id_pessoa %>"><%= patient.nome %> - <%= cpfFormatter(patient.cpf) %></option>
                     <% }); %>
                 </select>
+                <label for="patient-name">Nome do paciente</label>
             </div>
         </div>
 
         <div class="grid">
 
-            <div>
-                <label for="appointment_date" class="mb-1">Data da Consulta</label>
-                <div class="input-group">
-                    <label for="appointment_date" class="input-group-text"><span class="bi bi-calendar"></span></label>
+            <div class="input-group">
+                <label for="appointment_date" class="input-group-text"><span class="bi bi-calendar"></span></label>
+                <div class="form-floating">
                     <input type="date" name="data_atendimento" id="appointment_date" class="form-control" onkeydown="return false" required>
+                    <label for="appointment_date">Data da consulta</label>
                 </div>
             </div>
 
-            <div>
-                <label for="appointment_time" class="mb-1">Horário da Consulta</label>
-                <div class="input-group">
-                    <label for="appointment_time" class="input-group-text"><span class="bi bi-clock"></span></label>
+            <div class="input-group">
+                <label for="appointment_time" class="input-group-text"><span class="bi bi-clock"></span></label>
+                <div class="form-floating">
                     <input type="time" name="horario_atendimento" id="appointment_time" class="form-control" onkeydown="return false" >
+                    <label for="appointment_time">Horário da consulta</label>
                 </div>
             </div>
 
@@ -50,7 +50,7 @@
 
         </div>
 
-        <button class="btn btn-dark" onclick="gettingData()" data-bs-toggle="modal" data-bs-target="#exampleModal">Realizar atendimento</button>
+        <button class="btn btn-dark py-2" onclick="gettingData()" data-bs-toggle="modal" data-bs-target="#exampleModal">Realizar atendimento</button>
     </div>
 
     <div class="modal modal-lg fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

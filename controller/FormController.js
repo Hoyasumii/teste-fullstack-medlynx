@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const api = require(`../model/api`);
+const api = require(`../services/api`);
 
 const cpfFormatter = require(`../public/scripts/formatters/cpfFormatter`);
 const moneyFormatter = require(`../public/scripts/formatters/moneyFormatter`);
@@ -90,15 +90,6 @@ router.post(`/novo-atendimento/2`, (req, res) => {
     let body = req.body;
 
     let itens = JSON.parse(body.itens);
-
-    // res.send({
-    //     id_pessoa: body.id_pessoa,
-    //     data_atendimento: body.data_atendimento,
-    //     itens: itens
-    // })
-
-    // let data_atendimento = new Date(body.data_atendimento);
-    // data_atendimento.setHours(data_atendimento.getHours() - 3);
 
     api.post(`/atendimentos/new`, {
         id_pessoa: body.id_pessoa,

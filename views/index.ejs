@@ -1,7 +1,6 @@
 <%- include(`./partials/header.ejs`) %>
 
 <!-- TODO: Criar um relatório por atendimento: Valores dos itens, data + Evolução -->
-<!-- TODO: O Requisito 3 está incompleto. Na questão fala: No ano de 2022. Então, eu vou precisar pegar apenas os atendimentos que ocorreram no ano de 2022 -->
 
 <div class="container my-3 d-flex flex-column gap-3">
 
@@ -12,12 +11,14 @@
 
     <hr class="my-0">
 
-    <div class="alert alert-dark my-0 shadow-sm">
-        Clique <a href="/question/1" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-100-hover"><strong>aqui</strong></a> para saber os 5 itens com maior consumo nos atendimentos.
+    <div class="bg-body-tertiary p-3 border rounded">
+        <span class="bi bi-info-circle me-1"></span>
+        Clique <a href="/question/1" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-100-hover"><strong>aqui</strong></a> para saber os 5 itens com <strong>maior</strong> consumo nos atendimentos.
     </div>
 
-    <div class="alert alert-dark my-0 shadow-sm">
-        Clique em <a href="/question/3" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-100-hover"><strong>aqui</strong></a> para saber quais foram os pacientes que tiveram reação alérgica grave no ano de <strong>2022</strong>.
+    <div class="bg-body-tertiary p-3 border rounded">
+        <span class="bi bi-info-circle me-1"></span>
+        Clique em <a href="/question/3" class="link-body-emphasis link-underline link-underline-opacity-0 link-underline-opacity-100-hover"><strong>aqui</strong></a> para saber quais foram os pacientes que tiveram <strong>reação alérgica grave</strong> no ano de <strong>2022</strong>.
     </div>
 
     <div>
@@ -31,18 +32,22 @@
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <span class="bi bi-person-fill me-2"></span>
                     Por atendimento
                 </button>
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                    <form method="post" action="" class="d-flex justify-content-between gap-3">
-                        <select name="" id="" class="form-control">
-                            <% data.forEach(item => { %>
-                                <option value="<%= item.id_atendimento %>">Atendimento <%= item.id_atendimento %> - <%= item.nome %> - <%= item.data_atendimento %></option>
-                            <% }); %>
-                        </select>
-                        <button class="btn btn-dark">Gerar</button>
+                    <form method="post" action="" class="input-group">
+                        <div class="form-floating">
+                            <select name="id_atendimento" id="appointment_id" class="form-select">
+                                <% data.forEach(item => { %>
+                                    <option value="<%= item.id_atendimento %>">Atendimento <%= item.id_atendimento %> - <%= item.nome %> - <%= item.data_atendimento %></option>
+                                <% }); %>
+                            </select>
+                            <label for="appointment_id">Escolha o atendimento</label>
+                        </div>
+                        <button class="btn btn-light border">Gerar</button>
                     </form>
                 </div>
             </div>
@@ -50,12 +55,13 @@
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <span class="bi bi-calendar me-2"></span>
                     Por períodos
                 </button>
             </h2>
             <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                    <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    
                 </div>
             </div>
         </div>

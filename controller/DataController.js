@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const api = require(`../model/api`);
+const api = require(`../services/api`);
 
 const moneyFormatter = require(`../public/scripts/formatters/moneyFormatter`);
 
@@ -60,16 +60,5 @@ router.get(`/evolucoes`, (req, res) => {
         });
     });
 });
-
-/*
-1. Instanciar o axios
-2. Fazer a requisição para a API
-3. Pegar o resultado da requisição
-4. Contar a quantidade de propriedades do objeto
-5. Renderizar a view, enviando: {
-    model: Array,
-    data: JSON
-}  
-*/
 
 module.exports = router;

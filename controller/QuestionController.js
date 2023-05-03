@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const api = require(`../model/api`);
+const api = require(`../services/api`);
 
 const moneyFormatter = require(`../public/scripts/formatters/moneyFormatter`);
 const getNumberFromMoney = require(`../public/scripts/getNumberFromMoney`);
@@ -47,6 +47,18 @@ router.get(`/1`, (req, res) => {
         });
 
     });
+
+});
+
+router.get(`/2:id?`, (req, res) => {
+
+    let id = req.params.id ?? false;
+    
+    if (id) {
+        res.send(`Hello World`)
+    }
+
+    res.send(id)
 
 });
 
@@ -123,7 +135,7 @@ router.get(`/3`, (req, res) => {
         res.render(`read`, {
             columns: Object.keys(data[0]),
             data: data,
-            title: "Pacientes com reação alérgica grave"
+            title: "Pacientes com reação alérgica grave no ano de 2022"
         });
 
     });

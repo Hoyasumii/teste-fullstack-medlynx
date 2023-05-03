@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const api = require(`../model/api`);
+const api = require(`../services/api`);
 
 const dataFormatter = require(`../public/scripts/formatters/dataFormatter`);
 

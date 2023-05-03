@@ -1,6 +1,12 @@
 let now = new Date(Date.now());
 let date = `${now.getFullYear()}-${addZero(now.getMonth() + 1)}-${addZero(now.getDate())}`;
 
+function createDiv(...classes) {
+    let div = document.createElement(`div`);
+    div.classList.add(...classes);
+    return div;
+}
+
 function addZero(number) {
     if (number < 10 && number >= 0) {
         return `0${number}`;
@@ -28,26 +34,32 @@ function addItem(itemList) {
 
     let current = itemCounter;
 
-    let container = document.createElement(`div`);
-    container.classList.add(`bg-body-tertiary`, `p-3`, `border`, `rounded`, `d-flex`, `align-items-center`, `justify-content-between`, `gap-3`, `added-item`);
-    container.id = `item-${itemCounter}`;
+    let inputGroup = createDiv(`input-group`, `added-item`);
+    inputGroup.id = `item-${itemCounter}`;
 
-    let inputGroup = document.createElement(`div`);
-    inputGroup.classList.add(`input-group`, `selected-itens`);
+    let inputGroupLabel = document.createElement(`label`);
+    inputGroupLabel.classList.add(`input-group-text`);
+    inputGroupLabel.setAttribute(`for`, `item-${itemCounter}-name`);
+    inputGroupLabel.innerHTML = `<span class="bi bi-capsule">`
 
-    let itemLabel = document.createElement(`label`);
-    itemLabel.classList.add(`input-group-text`);
-    itemLabel.setAttribute(`for`, `item-${itemCounter}-name`);
-    itemLabel.innerHTML = `<span class="bi bi-capsule"></span>`;
+    let formFloatingItem = createDiv(`form-floating`, `w-50`);
 
     let itemSelect = document.createElement(`select`);
-    itemSelect.classList.add(`form-control`, `w-75`);
+    itemSelect.classList.add(`form-select`);
     itemSelect.setAttribute(`name`, `item-${itemCounter}-name`);
     itemSelect.setAttribute(`id`, `item-${itemCounter}-name`);
 
     itemList.forEach(item => {
         itemSelect.innerHTML += `<option value="${item.id_item}">${item.descricao} - ${moneyFormatter(item.valor)}</option>`;
     })
+
+    itemListLabel = document.createElement(`label`);
+    itemListLabel.setAttribute(`for`, `item-${itemCounter}-name`);
+    itemListLabel.innerHTML = `Escolha a medicação`;
+
+    formFloatingItem.append(itemSelect, itemListLabel);
+
+    let formFloatingAmount = createDiv(`form-floating`, `w-25`);
 
     let amountInput = document.createElement(`input`);
     amountInput.classList.add(`form-control`, `w-min`);
@@ -59,18 +71,19 @@ function addItem(itemList) {
     amountInput.setAttribute(`value`, `1`);
     amountInput.onkeydown = () => false;
 
+    let amountLabel = document.createElement(`label`);
+    amountLabel.setAttribute(`for`, `item-${itemCounter}-amount`);
+    amountLabel.innerHTML = `Quantidade`;
+
+    formFloatingAmount.append(amountInput, amountLabel);
+
     let deleteButton = document.createElement(`button`);
-    deleteButton.classList.add(`btn`, `btn-dark`);
+    deleteButton.classList.add(`btn`, `btn-light`, `border`);
     deleteButton.setAttribute(`type`, `button`);
     deleteButton.innerHTML = `<span class="bi bi-trash"></span>`;
     deleteButton.addEventListener(`click`, () => deleteItem(`item-${current}`));
 
-    inputGroup.appendChild(itemLabel);
-    inputGroup.appendChild(itemSelect);
-    inputGroup.appendChild(amountInput);
-
-    container.appendChild(inputGroup);
-    container.appendChild(deleteButton);
+    inputGroup.append(inputGroupLabel, formFloatingItem, formFloatingAmount, deleteButton);
 
     if (itemCounter == 1) {
         let hr1 = document.createElement(`hr`);
@@ -86,7 +99,7 @@ function addItem(itemList) {
         document.getElementById(`place`).append(hr1, itensContainer, hr2);
     }
 
-    document.getElementById(`itens-container`).appendChild(container);
+    document.getElementById(`itens-container`).appendChild(inputGroup);
 
     itemCounter++;
 
@@ -97,15 +110,14 @@ function deleteItem(id) {
 }
 
 function loading() {
-    let loadingDiv = document.createElement(`div`);
-    loadingDiv.classList.add(`d-flex`, `justify-content-center`, `align-items-center`, `gap-1`);
+    let loadingDiv = createDiv(`d-flex`, `justify-content-center`, `align-items-center`, `gap-1`);
     loadingDiv.id = `loading`;
     
-    let loading = document.createElement(`div`);
-    loading.classList.add(`spinner-border`, `text-dark`);
+    let loading = createDiv(`spinner-border`, `text-dark`);
     loading.id = `loading`;
     
     loadingDiv.appendChild(loading);
+
     // Quando ele for aberto, eu vou querer remover TODO e qualquer conteúdo de #modal-body
     document.getElementById(`modal-body`).innerHTML = ``;
     document.getElementById(`modal-body`).appendChild(loadingDiv);
@@ -238,8 +250,7 @@ function creatingModal(data) {
         container.append(titleDiv, itensTable, footerDiv);
 
     } else {
-        let noItensDiv = document.createElement(`div`);
-        noItensDiv.classList.add(`bg-body-tertiary`, `p-3`, `border`, `rounded`);
+        let noItensDiv = createDiv(`bg-body-tertiary`, `p-3`, `border`, `rounded`);
         noItensDiv.innerText = `Nenhum item foi selecionado`;
         container.append(noItensDiv);
     }
