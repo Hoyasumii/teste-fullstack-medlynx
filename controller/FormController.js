@@ -115,11 +115,14 @@ router.get(`/nova-evolucao`, (req, res) => {
             let dataAtendimento = new Date(atendimento.data_atendimento);
             dataAtendimento.setHours(dataAtendimento.getHours() - 3);
 
+            let pessoa = pessoas.find(pessoa => pessoa.id_pessoa == atendimento.id_pessoa);
+
             return {
                 id_atendimento: atendimento.id_atendimento,
                 id_pessoa: atendimento.id_pessoa,
                 data_atendimento: dataFormatter(dataAtendimento, false),
-                nome: pessoas.find(pessoa => pessoa.id_pessoa == atendimento.id_pessoa).nome
+                nome: pessoa.nome,
+                cpf: cpfFormatter(pessoa.cpf)
             }
         });
 
@@ -137,6 +140,7 @@ router.post(`/nova-evolucao/1`, (req, res) => {
     let id_atendimento = body.id_atendimento;
 
     let data = new Date(`${body.appointment_date} ${body.appointment_time}`);
+
     data.setHours(data.getHours() - 3); // Horário de Brasília
 
     let descricao = body.descricao;

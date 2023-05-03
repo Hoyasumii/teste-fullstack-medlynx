@@ -1,4 +1,4 @@
-img[src="/logo.png"] {
+img[src="/logo.png"], img[src="/logo-dark.png"] {
     height: 3.1rem;
 }
 

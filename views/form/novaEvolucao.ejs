@@ -7,35 +7,47 @@
         <hr class="my-0">
 
         <form action="/form/nova-evolucao/1" method="post" class="d-flex flex-column gap-3" id="form" novalidate>
-            <div class="grid">
-                <div>
-                    <label for="appointment_id" class="mb-1">Deseja atualizar qual atendimento?</label>
-                    <div class="input-group">
-                        <label for="appointment_id" class="input-group-text"><span class="bi bi-person"></span></label>
-                        <select name="id_atendimento" id="appointment_id" class="form-select">
-                            <% data.forEach(item => { %>
-                                <option value="<%= item.id_atendimento %>">Atendimento <%= item.id_atendimento %> - <%= item.nome %> - <%= item.data_atendimento %></option>
+            <div class="input-group">
+                <label for="appointment_id" class="input-group-text"><span class="bi bi-person"></span></label>
+                <div class="form-floating">
+                    <select name="id_atendimento" id="appointment_id" class="form-select">
+                        <% data.forEach(item => { %>
+                            <option value="<%= item.id_atendimento %>">Atendimento <%= item.id_atendimento %> - <%= item.nome %> - <%= item.cpf %> - <%= item.data_atendimento %></option>
                             <% }); %>
                         </select>
+                    <label for="appointment_id">Deseja atualizar qual atendimento?</label>
+                </div>
+            </div>
+
+            <div class="grid">
+
+                <div class="input-group">
+                    <label for="appointment_date" class="input-group-text"><span class="bi bi-calendar"></span></label>
+                    <div class="form-floating">
+                        <input type="date" name="appointment_date" id="appointment_date" class="form-control" onkeydown="return false" required>
+                        <label for="appointment_date">Data da atualização</label>
                     </div>
                 </div>
     
-                <div>
-                    <label for="appointment_date" class="mb-1">Data da atualização</label>
-                    <div class="input-group">
-                        <label for="appointment_date" class="input-group-text"><span class="bi bi-calendar"></span></label>
-                        <input type="date" name="appointment_date" id="appointment_date" class="form-control" onkeydown="return false" required>
-                        <label for="appointment_time" class="input-group-text"><span class="bi bi-clock"></span></label>
-                        <input type="time" name="appointment_time" id="appointment_time" class="form-control" onkeydown="return false" required>
+                <div class="input-group">
+                    <label for="appointment_time" class="input-group-text"><span class="bi bi-clock"></span></label>
+                    <div class="form-floating">
+                        <input type="time" name="appointment_time" id="appointment_time" class="form-control" onkeydown="return false" >
+                        <label for="appointment_time">Horário da atualização</label>
                     </div>
-                </div>            
+                </div>
+    
             </div>
     
-            <div class="form-floating">
-                <textarea name="descricao" id="description" cols="30" rows="3" class="form-control" placeholder="Descreva aqui o que mudou no estado do paciente" required></textarea>
-                <label for="description">Descreva aqui o que mudou no estado do paciente</label>
-                <div class="invalid-feedback">Você precisa informar o que mudou no estado do paciente!</div>
+            <div class="input-group">
+                <label for="description" class="input-group-text"><span class="bi bi-card-text"></span></label>
+                <div class="form-floating">
+                    <input name="descricao" id="description" class="form-control" placeholder="Descreva aqui o que mudou no estado do paciente" required autocomplete="off"></textarea>
+                    <label for="description">Descreva aqui o que mudou no estado do paciente</label>
+                    <div class="invalid-feedback">Você precisa informar o que mudou no estado do paciente!</div>
+                </div>
             </div>
+
 
             <button type="submit" class="btn btn-dark">Registrar evolução</button>
         </form>
