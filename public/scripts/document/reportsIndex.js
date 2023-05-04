@@ -148,8 +148,63 @@ let botaoEvolucoes = document.querySelectorAll(`.botao-evolucoes`);
 
 botaoEvolucoes.forEach(botao => {
     botao.addEventListener(`click`, async () => {
+        setLoading();
+        modal.show();
         fetch(`reports/evolucoes/${botao.value}`).then(response => response.json()).then(data => {
-            console.log(data);
+            let values = data;
+
+            if (values.length > 0) {
+                let keys = Object.keys(values[0]);
+    
+                clearModalContent();
+                modalDialog.classList.add(`modal-xl`);
+                modalTitle.innerHTML = `Evoluções do atendimento ${values[0].id_atendimento}`;
+
+                let table = document.createElement(`table`);
+                table.classList.add(`table`, `table-hover`);
+
+                let tableHead = document.createElement(`thead`);
+                tableHead.classList.add(`table-head`);
+
+                let headRow = document.createElement(`tr`);
+
+                keys.forEach(key => {
+                    let th = document.createElement(`th`);
+                    th.innerHTML = key;
+
+                    headRow.appendChild(th);
+                });
+
+                tableHead.appendChild(headRow);
+                
+                let tableBody = document.createElement(`tbody`);
+                tableBody.classList.add(`table-body`);
+                
+                values.forEach(value => {
+                    let tr = document.createElement(`tr`);
+
+                    keys.forEach(key => {
+                        let td = document.createElement(`td`);
+                        td.innerHTML = value[key];
+
+                        tr.appendChild(td);
+                    });
+
+                    tableBody.appendChild(tr);
+                });
+
+                table.append(tableHead, tableBody);
+                modalBody.appendChild(table);
+
+            } else {
+                clearModalContent();
+                modalTitle.innerHTML = `Aviso`;
+
+                let emptyValue = createDiv(`bg-body-tertiary`, `border`, `rounded`, `p-3`)
+                emptyValue.innerHTML = `Não há lançamentos para esse atendimento.`;
+
+                modalBody.appendChild(emptyValue);
+            }
         })
     });
 });

@@ -107,7 +107,15 @@ router.get(`/evolucoes/:id_atendimento`, (req, res) => {
 
         let evolucoesFiltradas = data.filter(evolucao => evolucao.id_atendimento == id_atendimento);
 
-        res.send(evolucoesFiltradas);
+        data = evolucoesFiltradas.map(evolucao => {
+            return {
+                id_atendimento: evolucao.id_atendimento,
+                data: dateFormatter(evolucao.data, true, true),
+                descricao: evolucao.descricao
+            }
+        });
+
+        res.send(data);
     })
 });
 

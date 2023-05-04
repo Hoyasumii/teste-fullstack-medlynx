@@ -133,7 +133,6 @@ async function gettingData() {
     let appointment_time = document.getElementById(`appointment_time`).value;
 
     let data_atendimento = new Date(`${appointment_date} ${appointment_time}`);
-    data_atendimento.setHours(data_atendimento.getHours() - 3); // Horário de Brasília
 
     let itens = document.getElementsByClassName(`added-item`);
     let selectedItens = [];

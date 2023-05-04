@@ -9,9 +9,9 @@ module.exports = (date, complete = true, toConvert = false) => {
     let months = [`janeiro`, `fevereiro`, `março`, `abril`, `maio`, `junho`, `julho`, `agosto`, `setembro`, `outubro`, `novembro`, `dezembro`]
 
     if (complete) {
-        return `${zeroFormater(date.getUTCDate())} de ${months[date.getUTCMonth()]} de ${date.getUTCFullYear()} às ${zeroFormater(date.getUTCHours())}:${zeroFormater(date.getUTCMinutes())}`
+        return `${zeroFormater(date.getDate())} de ${months[date.getMonth()]} de ${date.getFullYear()} às ${zeroFormater(date.getHours())}:${zeroFormater(date.getMinutes())}`
     }
 
-    return `${zeroFormater(date.getUTCDate())}/${zeroFormater(date.getUTCMonth() + 1)}/${date.getUTCFullYear()} ${zeroFormater(date.getUTCHours())}:${zeroFormater(date.getUTCMinutes())}`
+    return `${zeroFormater(date.getDate())}/${zeroFormater(date.getMonth() + 1)}/${date.getFullYear()} ${zeroFormater(date.getHours())}:${zeroFormater(date.getMinutes())}`
 
 }

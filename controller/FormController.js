@@ -90,10 +90,12 @@ router.post(`/novo-atendimento/2`, (req, res) => {
     let body = req.body;
 
     let itens = JSON.parse(body.itens);
+    let data_atendimento = new Date(body.data_atendimento);
+    data_atendimento.setHours(data_atendimento.getHours() - 3);
 
     api.post(`/atendimentos/new`, {
         id_pessoa: body.id_pessoa,
-        data_atendimento: new Date(body.data_atendimento),
+        data_atendimento: data_atendimento,
         itens: itens
     }).then(response => {
         res.redirect(`/`);
