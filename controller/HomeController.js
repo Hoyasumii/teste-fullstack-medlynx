@@ -3,7 +3,7 @@ const router = express.Router();
 
 const api = require(`../services/api`);
 
-const dataFormatter = require(`../public/scripts/formatters/dataFormatter`);
+const dateFormatter = require(`../public/scripts/formatters/dateFormatter`);
 
 router.get(`/`, (req, res) => {
 
@@ -16,13 +16,13 @@ router.get(`/`, (req, res) => {
 
         let data = atendimentos.map(atendimento => {
 
-            let data = new Date(atendimento.data_atendimento);
-            data.setHours(data.getHours() - 3);
+            let date = new Date(atendimento.data_atendimento);
+            date.setHours(date.getHours() - 3);
 
             return {
                 id_atendimento: atendimento.id_atendimento,
                 id_pessoa: atendimento.id_pessoa,
-                data_atendimento: dataFormatter(data, false),
+                data_atendimento: dateFormatter(date, false),
                 nome: pessoas.find(pessoa => pessoa.id_pessoa == atendimento.id_pessoa).nome
             }
         });

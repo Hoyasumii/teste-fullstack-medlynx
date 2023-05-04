@@ -1,0 +1,51 @@
+<%- include("../partials/header.ejs") %>
+
+<div class="container my-3">
+
+    <h1 class="display-6">
+        <%= title %>
+    </h1>
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <% columns.forEach(column => { %>
+                    <th><%= column %></th>
+                <% }); %>
+                <th>Paciente</th>
+                <th>Lançamentos</th>
+                <th>Evoluções</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% data.forEach(item => { %>
+                <tr>
+                    <% Object.keys(item).forEach(key => { %>
+                        <td><%= item[key] %></td>
+                    <% }); %>
+                    <td><button class="btn btn-dark botao-paciente" value="<%= item.id_pessoa %>">Acessar dados do paciente</button></td>
+                    <td><button class="btn btn-dark botao-lancamentos" value="<%= item.id_atendimento %>">Acessar os lançamentos</a></td>
+                    <td><button class="btn btn-dark botao-evolucoes" value="<%= item.id_atendimento %>">Acessar as evoluções</button></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="display-data" aria-labelledby="displayDataModal" aria-hidden="true">
+    <div class="modal-dialog" id="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center gap-3">
+                <h1 class="modal-title fs-5 w-100" id="modal-title"></h1>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/scripts/document/reportsIndex.js"></script>
+
+<%- include("../partials/footer.ejs") %>

@@ -50,18 +50,6 @@ router.get(`/1`, (req, res) => {
 
 });
 
-router.get(`/2:id?`, (req, res) => {
-
-    let id = req.params.id ?? false;
-    
-    if (id) {
-        res.send(`Hello World`)
-    }
-
-    res.send(id)
-
-});
-
 router.get(`/3`, (req, res) => {
 
     let pacientes = api.get(`/pessoas`);

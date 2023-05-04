@@ -3,10 +3,6 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-/* TODO: Antes de enviar, checar o nome das variáveis e deixá-las apenas no inglês. */
-
-// TODO: Melhorar o Menu principal
-
 /* TODO:
     Esse requisito 2 dá pra fazer d+:
     1. Cria um formulário com a data e hora inicial do período + a final
@@ -25,6 +21,7 @@ app.use(`/`, require(`./controller/HomeController`));
 app.use(`/data`, require(`./controller/DataController`));
 app.use(`/question`, require(`./controller/QuestionController`));
 app.use(`/form`, require(`./controller/FormController`));
+app.use(`/reports`, require(`./controller/ReportsController`));
 
 app.listen(3000, () => {
     console.log('Server is running at http://localhost:3000');

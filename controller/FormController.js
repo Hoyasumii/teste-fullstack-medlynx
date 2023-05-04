@@ -5,7 +5,7 @@ const api = require(`../services/api`);
 
 const cpfFormatter = require(`../public/scripts/formatters/cpfFormatter`);
 const moneyFormatter = require(`../public/scripts/formatters/moneyFormatter`);
-const dataFormatter = require(`../public/scripts/formatters/dataFormatter`);
+const dateFormatter = require(`../public/scripts/formatters/dateFormatter`);
 
 const getNumberFromMoney = require(`../public/scripts/getNumberFromMoney`);
 
@@ -23,7 +23,7 @@ router.get(`/novo-atendimento`, (req, res) => {
             patients: pessoas,
             cpfFormatter: cpfFormatter,
             moneyFormatter: moneyFormatter,
-            dataFormatter: dataFormatter,
+            dateFormatter: dateFormatter,
             itens: itens
         });
     });
@@ -79,7 +79,7 @@ router.post(`/novo-atendimento/1`, async (req, res) => {
             dados_documento: {
                 usuario: usuario,
                 itens: dadosDocumento,
-                data_atendimento: dataFormatter(new Date(body.data_atendimento)),
+                data_atendimento: dateFormatter(body.data_atendimento, true, true),
                 total: moneyFormatter(dadosDocumento.reduce((acc, cur) => acc + getNumberFromMoney(cur[`Valor a ser pago`]), 0))
             }
         });
@@ -120,7 +120,7 @@ router.get(`/nova-evolucao`, (req, res) => {
             return {
                 id_atendimento: atendimento.id_atendimento,
                 id_pessoa: atendimento.id_pessoa,
-                data_atendimento: dataFormatter(dataAtendimento, false),
+                data_atendimento: dateFormatter(dataAtendimento, false),
                 nome: pessoa.nome,
                 cpf: cpfFormatter(pessoa.cpf)
             }
@@ -139,15 +139,15 @@ router.post(`/nova-evolucao/1`, (req, res) => {
 
     let id_atendimento = body.id_atendimento;
 
-    let data = new Date(`${body.appointment_date} ${body.appointment_time}`);
+    let date = new Date(`${body.appointment_date} ${body.appointment_time}`);
 
-    data.setHours(data.getHours() - 3); // Horário de Brasília
+    date.setHours(date.getHours() - 3); // Horário de Brasília
 
     let descricao = body.descricao;
 
     api.post(`/evolucao/new` ,{
         id_atendimento: id_atendimento,
-        data: data,
+        data: date,
         descricao: descricao
     }).then(response => {
         res.redirect(`/`);
