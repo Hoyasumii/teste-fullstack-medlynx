@@ -27,9 +27,12 @@ router.get(`/`, (req, res) => {
             }
         });
 
+        let months = [`Janeiro`, `Fevereiro`, `Março`, `Abril`, `Maio`, `Junho`, `Julho`, `Agosto`, `Setembro`, `Outubro`, `Novembro`, `Dezembro`];
+
         res.render(`index`, {
             title: "Página Inicial",
-            data: data
+            data: data,
+            months
         });
 
     });

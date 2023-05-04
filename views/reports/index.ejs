@@ -6,30 +6,36 @@
         <%= title %>
     </h1>
 
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <% columns.forEach(column => { %>
-                    <th><%= column %></th>
-                <% }); %>
-                <th>Paciente</th>
-                <th>Lançamentos</th>
-                <th>Evoluções</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% data.forEach(item => { %>
+    <% if (data) { %>
+        <table class="table table-bordered table-hover">
+            <thead>
                 <tr>
-                    <% Object.keys(item).forEach(key => { %>
-                        <td><%= item[key] %></td>
+                    <% columns.forEach(column => { %>
+                        <th><%= column %></th>
                     <% }); %>
-                    <td><button class="btn btn-dark botao-paciente" value="<%= item.id_pessoa %>">Acessar dados do paciente</button></td>
-                    <td><button class="btn btn-dark botao-lancamentos" value="<%= item.id_atendimento %>">Acessar os lançamentos</a></td>
-                    <td><button class="btn btn-dark botao-evolucoes" value="<%= item.id_atendimento %>">Acessar as evoluções</button></td>
+                    <th>Paciente</th>
+                    <th>Lançamentos</th>
+                    <th>Evoluções</th>
                 </tr>
-            <% }); %>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <% data.forEach(item => { %>
+                    <tr>
+                        <% Object.keys(item).forEach(key => { %>
+                            <td><%= item[key] %></td>
+                        <% }); %>
+                        <td><button class="btn btn-dark botao-paciente" value="<%= item.id_pessoa %>">Acessar dados do paciente</button></td>
+                        <td><button class="btn btn-dark botao-lancamentos" value="<%= item.id_atendimento %>">Acessar os lançamentos</a></td>
+                        <td><button class="btn btn-dark botao-evolucoes" value="<%= item.id_atendimento %>">Acessar as evoluções</button></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p class="bg-body-tertiary p-3 border rounded">Nenhum dado encontrado</p>
+    <% } %>
+
+    
 </div>
 
 <div class="modal fade" id="display-data" aria-labelledby="displayDataModal" aria-hidden="true">

@@ -10,33 +10,74 @@ const cpfFormatter = require(`../public/scripts/formatters/cpfFormatter`);
 const rgFormatter = require(`../public/scripts/formatters/rgFormatter`);
 const cepFormatter = require(`../public/scripts/formatters/cepFormatter`);
 
-router.get(`/`, (req, res) => {
+const detect = (...values) => {
+	let current = null;
+
+	for (let index = 0; index < values.length; index++) {
+		current = values[index];
+		if (current != null) return index;
+	}
+}
+
+router.get(`/`, async (req, res) => {
 
     let id_atendimento = req.query.id_atendimento ?? null;
 
-    if (id_atendimento) {
-        api.get(`/atendimentos/${id_atendimento}`).then(response => {
+    let mes_desejado = req.query.mes_desejado ?? null;
+    let ano_desejado = req.query.ano_desejado ?? null;
+
+    let active = detect(id_atendimento, (mes_desejado && ano_desejado));
+    let data = null;
+
+    switch (active) {
+        case 0:
+            await api.get(`/atendimentos/${id_atendimento}`).then(response => {
             
-            let data = response.data;
-            if (!data) throw new Error(`Atendimento não encontrado`);
+                let responseData = response.data;
+                if (!responseData) throw new Error(`Atendimento não encontrado`);
+                responseData.data_atendimento = dateFormatter(responseData.data_atendimento, true, true);
+                data = [responseData];
+            }).catch(err => {
+            });
+            break;
+        case 1:
+            await api.get(`/atendimentos`).then(response => {
+                let responseData = response.data;
+                
+                data = responseData.filter(atendimento => {
+                    let atendimentoDate = new Date(atendimento.data_atendimento);
 
-            data.data_atendimento = dateFormatter(data.data_atendimento, true, true);
+                    if (atendimentoDate.getMonth() + 1 == mes_desejado && atendimentoDate.getFullYear() == ano_desejado) {
+                        atendimento.data_atendimento = dateFormatter(atendimento.data_atendimento, true, true);
+                        return atendimento;
+                    }
+                });
 
-            res.render(`reports/index`, {
-                title: `Relatório`,
-                data: [data],
-                columns: Object.keys(data)
-            })
-        }).catch(err => {
-            res.send(`Atendimento não encontrado`)
-        });
+                data = (data.length == 0) ? null : data;
+
+            }).catch(err => {});
+            break;
+        default:
+            
+            break;
     }
+
+    let columns = null;
+
+    try {
+        columns = Object.keys(data[0]);
+    } catch(err) {
+        columns = [];
+    }
+
+    res.render(`reports/index`, {
+        title: `Relatório`,
+        data: data,
+        columns: columns
+    })
 
     // TODO: Quando for aberto o relatório geral ou o por período, colocar um botão que vai calcular o valor total de todos os atendimentos e mostrar em um modal
 
-    else {
-        res.send(`Aqui vai ser um relatório geral de todos os atendimentos`)
-    }
 });
 
 router.get(`/pessoas/:id_pessoa`, (req, res) => {
