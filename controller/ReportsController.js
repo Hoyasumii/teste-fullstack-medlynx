@@ -24,11 +24,13 @@ router.get(`/`, async (req, res) => {
     let id_atendimento = req.query.id_atendimento ?? null;
 
     let mes_desejado = req.query.mes_desejado ?? null;
+    let trimestre_desejado = req.query.trimestre_desejado ?? null;
+    let semestre_desejado = req.query.semestre_desejado ?? null;
     let ano_desejado = req.query.ano_desejado ?? null;
 
     let mode = req.query.mode ?? null;
 
-    let active = detect(id_atendimento, (mes_desejado && ano_desejado), mode);
+    let active = detect(id_atendimento, (mes_desejado && ano_desejado), (trimestre_desejado && ano_desejado), (semestre_desejado && ano_desejado), ano_desejado, mode);
     let data = null;
 
     switch (active) {
@@ -62,15 +64,68 @@ router.get(`/`, async (req, res) => {
         case 2:
             await api.get(`/atendimentos`).then(response => {
                 let responseData = response.data;
+
+                data = responseData.filter(atendimento => {
+                    let atendimentoDate = new Date(atendimento.data_atendimento);
+
+                    if (atendimentoDate.getFullYear() == ano_desejado) {
+                        let trimestre = Math.ceil((atendimentoDate.getMonth() + 1) / 3);
+                        if (trimestre == trimestre_desejado) {
+                            atendimento.data_atendimento = dateFormatter(atendimento.data_atendimento, true, true);
+                            return atendimento;
+                        }
+                    }
+                });
+
+                data = (data.length == 0) ? null : data;
+
+            }).catch(err => {});
+            break;
+        case 3:
+            await api.get(`/atendimentos`).then(response => {
+                let responseData = response.data;
+
+                data = responseData.filter(atendimento => {
+                    let atendimentoDate = new Date(atendimento.data_atendimento);
+
+                    if (atendimentoDate.getFullYear() == ano_desejado) {
+                        let semestre = Math.ceil((atendimentoDate.getMonth() + 1) / 6);
+                        if (semestre == semestre_desejado) {
+                            atendimento.data_atendimento = dateFormatter(atendimento.data_atendimento, true, true);
+                            return atendimento;
+                        }
+                    }
+                });
+
+                data = (data.length == 0) ? null : data;
+
+            }).catch(err => {});
+            break;
+        case 4:
+            await api.get(`/atendimentos`).then(response => {
+                let responseData = response.data;
+                
+                data = responseData.filter(atendimento => {
+                    let atendimentoDate = new Date(atendimento.data_atendimento);
+
+                    if (atendimentoDate.getFullYear() == ano_desejado) {
+                        atendimento.data_atendimento = dateFormatter(atendimento.data_atendimento, true, true);
+                        return atendimento;
+                    }
+                });
+
+                data = (data.length == 0) ? null : data;
+
+            }).catch(err => {});
+            break;
+        case 5:
+            await api.get(`/atendimentos`).then(response => {
+                let responseData = response.data;
                 data = responseData.map(atendimento => {
                     atendimento.data_atendimento = dateFormatter(atendimento.data_atendimento, true, true);
                     return atendimento;
                 });
             });
-
-            break;
-        default:
-            
             break;
     }
 
@@ -87,8 +142,6 @@ router.get(`/`, async (req, res) => {
         data: data,
         columns: columns
     })
-
-    // TODO: Quando for aberto o relatório geral ou o por período, colocar um botão que vai calcular o valor total de todos os atendimentos e mostrar em um modal
 
 });
 

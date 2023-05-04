@@ -84,7 +84,6 @@ botaoLancamentos.forEach(botao => {
 
             if (values.length > 0) {
                 let keys = Object.keys(values[0]);
-                console.log(keys)
                 let total = data.valorTotal;
     
                 clearModalContent();
