@@ -208,7 +208,3 @@ botaoEvolucoes.forEach(botao => {
         })
     });
 });
-
-
-
-

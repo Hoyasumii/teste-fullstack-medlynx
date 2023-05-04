@@ -2,11 +2,10 @@
 
 <div class="container my-3">
 
-    <h1 class="display-6">
-        <%= title %>
-    </h1>
-
+    <h1 class="display-6"><%= title %></h1>
+    
     <% if (data) { %>
+
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
@@ -20,7 +19,7 @@
             </thead>
             <tbody>
                 <% data.forEach(item => { %>
-                    <tr>
+                    <tr class="added-item" value="<%= item.id_atendimento %>">
                         <% Object.keys(item).forEach(key => { %>
                             <td><%= item[key] %></td>
                         <% }); %>
@@ -31,6 +30,7 @@
                 <% }); %>
             </tbody>
         </table>
+        
     <% } else { %>
         <p class="bg-body-tertiary p-3 border rounded">Nenhum dado encontrado</p>
     <% } %>

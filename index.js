@@ -3,14 +3,6 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-/* TODO:
-    Esse requisito 2 dá pra fazer d+:
-    1. Cria um formulário com a data e hora inicial do período + a final
-    2. No controller, percorre todos os atendimentos e filtra os que estão dentro desse período
-    3. Pega os dados da api /lancamentos e depois /itens para pegar os valores de cada atendimento.
-    4. Junta tudo e manda pro front
-*/
-
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 

@@ -26,7 +26,9 @@ router.get(`/`, async (req, res) => {
     let mes_desejado = req.query.mes_desejado ?? null;
     let ano_desejado = req.query.ano_desejado ?? null;
 
-    let active = detect(id_atendimento, (mes_desejado && ano_desejado));
+    let mode = req.query.mode ?? null;
+
+    let active = detect(id_atendimento, (mes_desejado && ano_desejado), mode);
     let data = null;
 
     switch (active) {
@@ -56,6 +58,16 @@ router.get(`/`, async (req, res) => {
                 data = (data.length == 0) ? null : data;
 
             }).catch(err => {});
+            break;
+        case 2:
+            await api.get(`/atendimentos`).then(response => {
+                let responseData = response.data;
+                data = responseData.map(atendimento => {
+                    atendimento.data_atendimento = dateFormatter(atendimento.data_atendimento, true, true);
+                    return atendimento;
+                });
+            });
+
             break;
         default:
             
