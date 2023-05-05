@@ -73,7 +73,8 @@ router.get(`/3`, (req, res) => {
             return {
                 id_atendimento: evolucao.id_atendimento,
                 id_pessoa: atendimentos.find(atendimento => atendimento.id_atendimento == evolucao.id_atendimento).id_pessoa,
-                data_atendimento: atendimentos.find(atendimento => atendimento.id_atendimento == evolucao.id_atendimento).data_atendimento
+                data_atendimento: atendimentos.find(atendimento => atendimento.id_atendimento == evolucao.id_atendimento).data_atendimento,
+                descricao_evolucao: evolucao.descricao
             }
         })
 
@@ -115,7 +116,8 @@ router.get(`/3`, (req, res) => {
                     nome: atendimento.nome,
                     cpf: atendimento.cpf,
                     id_item: atendimento.id_item,
-                    descricao_medicamento: atendimento.descricao_medicamento
+                    descricao_medicamento: atendimento.descricao_medicamento,
+                    descricao_evolucao: atendimento.descricao_evolucao
                 }
             }
         }).filter(atendimento => atendimento != undefined || atendimento != null);
